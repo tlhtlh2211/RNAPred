@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 # This class is used to embed the sequence of nucleotides into a tensor
 
@@ -49,7 +50,7 @@ class Embeds:
         '''
         seq = seq.upper().replace("T", "U") # Convert to uppercase and replace T with U (RNA -> DNA)
 
-        embed = torch.zeros((len(seq), self.size), dtype=torch.float) # Initialize the tensor
+        embed = torch.zeros((len(seq), self.size), dtype= np.float32) # Initialize the tensor
 
         for i, n in enumerate(seq):
             if n == pads: 
