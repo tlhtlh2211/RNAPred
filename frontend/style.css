@@ -1,0 +1,309 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body{
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif
+}
+                                                     
+nav {
+    width: 100%;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+nav ul{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+nav ul li{
+    display: inline-block;
+    line-height: 80px;
+    margin: 0 5px;
+    margin-right: 10px;
+}
+
+nav ul li a{
+    color: #000000;
+    font-size: 20px;
+    font-weight: 1000;
+    padding: 7px 13px;
+    border-radius: 5px;
+}
+
+ul li a.active{
+    text-decoration: underline;
+    color: #000000;
+    border-radius: 3px;
+}
+
+ul li a:hover{
+    background-color: #000000;
+    transition: .5s;
+    color: #ffffff;
+    border-radius: 3px;
+}
+
+label.logo{
+    color: #000000;
+    font-size: 35px;
+    line-height: 80px;
+    padding: 0 100px;
+    font-weight: bold;
+}
+
+
+.checkbtn{
+    font-size: 30px;
+    color: white;
+    float: right;
+    line-height: 80px;
+    margin-right: 40px;
+    cursor: pointer;
+    display: none;
+}
+#check{
+    display: none;
+}
+
+@media (max-width: 952px){
+    label.logo{
+        font-size: 30px;
+        padding-left: 50px;
+    }
+
+    nav ul li a{
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 858px){
+    .checkbtn{
+        display: block;
+    }
+
+    ul{
+        position: fixed;
+        width: 100%;   
+        height: 100vh;
+        top: 80px;
+        left: 0;
+        background-color: #a7bde7;
+        background: linear-gradient(to right, #d5def1, #eff6ff);
+        text-align: center;
+        transition: all .5s;
+    }
+    nav ul li{
+        display: block;
+    }
+    nav ul li a{
+        font-size: 20px;
+    }
+    a:hover, a.active{
+        background: none;
+        color: #004ca3;
+    }
+    #check:checked ~ ul{
+        left: 0;
+    }
+}
+
+.container1 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; 
+    align-items: center;
+    text-align: left;
+    max-width: 1500px;
+    height: 50vh;
+    margin: 10px 40px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#main-container {
+    display: flex;
+    width: 100%;
+    height: 120vh;
+  }
+  
+  #side1, #side2 {
+    padding: 20px; /* Adjust padding as needed */
+  }
+  
+  #side1 {
+    width: 20%;
+    background-color: #ffffff; /* Just to visually distinguish the sections */
+    border-right: 2px solid #a9a4a4; /* Adds a solid black line between the sections */
+    padding: 20px;
+  }
+  .section h3 {
+    margin-bottom: 10px;
+  }
+  
+  .github-link, .github-link:visited {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: black; /* Color of the text */
+    padding: 5px 10px;
+  }
+  
+  .github-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+
+  .github-link:hover {
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border-radius: 3px;
+    transition: 1s;
+  }
+  
+  .github-link:hover .github-logo {
+    filter: brightness(0.9); /* Reduce brightness of the logo on hover */
+    transition: 1s;
+    border-radius: 3px;
+  }
+  
+  .requirements-box {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: auto;
+  }
+  
+  hr {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 20px 0;
+  }
+  
+  #side2 {
+    padding: 20px;
+    border-right: 2px solid #ccc;
+    height: 100%; /* Adjust height if needed */
+    overflow-y: auto; /* Add scrollbar if content exceeds height */
+    font-size: 18px;
+  }
+  #sequence-input {
+    width: 100%; /* Make the input box full width */
+    resize: none; /* Prevent resizing of textarea */
+    font-size: 20px; /* Initial font size */
+    font-family: 'Montserrat', sans-serif;
+    padding: 7px;
+  }
+  #output-sequence,
+    #output-dot-structure {
+    width: 95%; /* Set width to 95% of viewport width */
+    max-width: 900px; /* Limit maximum width */
+    padding: 10px; /* Add padding */
+    }
+
+  footer {
+    width: 100%;
+    background-color: #e8f5ff;
+    background: #f8f8f8;
+    text-align: center;
+    padding: 10px 20px;
+    position: relative;
+    bottom: 0;
+    left: 0;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .footer-section {
+    flex: 1;
+    padding: 5px;
+  }
+
+  .footer-section p{
+    font-size: 15px;
+    background: #f8f8f8;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-section h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .footer-section ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .footer-section ul a{
+    font-size: 15px;
+    color: #48494a;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .footer-section ul a:hover {
+    background-color: #000000;
+    transition: .5s;
+    color: #ffffff;
+    border-radius: 3px;
+  }
+  
+  .footer-section ul li a {
+    font-size: 15px;
+    color: #464646;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .footer-section ul li a:hover {
+    background-color: #000000;
+    transition: .5s;
+    color: #ffffff;
+    border-radius: 3px;
+  }
+
+  .footer-section p a{
+    font-size: 15px;
+    color: #313131;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+    .footer-section p a:hover {
+        background-color: #000000;
+        transition: .5s;
+        color: #ffffff;
+        border-radius: 3px;
+    }
+  
+  .footer-bottom {
+    padding: 5px;
+    border-top: 1px solid #474747;
+  }
+  
+

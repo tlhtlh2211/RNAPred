@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="../image/cuisine.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RNA Pred</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<head>
+    <title>My Webpage</title>
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <ul>
+            <li><a class="active" href="/frontend">Main</a></li>
+            <li><a href="/frontend/about.html">About Us</a></li>
+            <li><a href="/frontend/references.html">References</a></li>
+        </ul>
+    </nav>
+    <div id="main-container">
+        <div id="side1">
+            <!-- Source Section -->
+            <div class="section">
+              <h3>SOURCE</h3>
+              <a href="https://github.com/tlhtlh2211/RNAPred" target="_blank" class="github-link">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" class="github-logo">
+                GitHub Repo
+              </a>
+            </div>
+            <hr> <!-- Visual Separator -->
+          
+            <!-- Requirement Section -->
+            <div class="section">
+              <h3>REQUIREMENT</h3>
+              <div class="requirements-box">
+                <pre>
+          torch>=1.4.0
+          munch>=2.5.0
+          scipy>=1.3.1
+          numpy>=1.14.3
+          pandas>=0.25.0
+          scikit_learn>=0.24.2
+                </pre>
+              </div>
+            </div>
+            <hr> <!-- Visual Separator -->
+          
+            <!-- Data Source Section -->
+            <div class="section">
+              <h3>DATA SOURCE</h3>
+              <p>RNA ArchiveII: ...</p>
+              <p>RNAstralign: ...</p>
+            </div>
+            <hr> <!-- Visual Separator -->
+          
+            <!-- Reference Section -->
+            <div class="section">
+              <h3>REFERENCES</h3>
+            </div>
+          </div>
+          <div id="side2">
+            <div style="font-size: 30px; margin-bottom: 20px;">Web Demo: RNA Pred</div>
+            <hr>
+          
+            <p><strong>RNAPred</strong> is a project for Course Related Project 1 at VinUniversity, focusing on the prediction of ncRNA secondary structures. This educational initiative employs machine learning models to enhance the understanding of ncRNA functionality.</p>
+            <br>
+            <p>We extend our gratitude to the educators and peers at VinUniversity for their guidance and collaboration on this project.</p>
+            <hr>
+          
+            <p style="font-size: 24px; margin-bottom: 20px;">Sample inputs:</p>
+            <br>
+            <p>AACCGGGUCAGGUCCGGAAGGAAGCAGCCCUAA<br>
+            <br>
+            CCACGGCGACUAUAUCCCUGGUGUUCACCUCUUCCCAUUCCGAACAGAGUCGUUAAGCCCAGGAGAGCCGAUGGUACUGCUUUAUUGCGGG<br>
+            AGAGUAGGUCGUCGCCGAGU<br>
+            </p>
+            <br>
+            <br>
+            <p style="font-size: 24px; margin-bottom: 20px;">Model Testing</p>
+            <hr>
+            <p><strong>Input (Sequence):</strong> </p><br>
+            <textarea id="sequence-input" rows="1" cols="200"></textarea>
+            <hr>
+          
+            <p><strong>Output (Sequence):</strong> <input type="text" id="output-sequence" readonly></p>
+            <br>
+            <p><strong>Dot Structure:</strong> <input type="text" id="output-dot-structure" readonly></p>
+            <br>
+            <p><strong>Structure:</strong> [Image of Structure]</p>
+          </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+          <div class="footer-section about">
+            <h3>Our Location</h3>
+            <p>VinUniversity, Gia Lam, Ha Noi</p>
+          </div>
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="/frontend/about.html">About Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-section social">
+            <h3>Contact</h3>
+            <p>
+                <a href="https://github.com/tlhtlh2211">Github</a> |
+                <a href="https://www.facebook.com/hai.trann.3114">Facebook</a>
+            </p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          &copy; | Designed by tlhtlh
+        </div>
+    </footer>
+    
+    <script src="index.js"></script>
+</body>
+</html>
