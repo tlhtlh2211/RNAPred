@@ -104,3 +104,9 @@ class Data(Dataset):
             pickle.dump(item, open(f"{self.cache}/{id}.pk", "wb"))
 
         return item
+    
+    def pad_patch(batch):
+        '''
+        batch: the batch of sequences, list of dictionaries
+        '''
+        

@@ -1,6 +1,9 @@
 import torch
 import pandas as pd
 import numpy as np
+import sklearn.metrics as metrics
+from grakle import Graph
+from grakle.kernels import WeisfeilerLehman, VertexHistogram, WeisfeilerLehmanOptimalAssignment, ShortestPath
 
 
 def dotbracket_to_basepairs(dotbracket):
@@ -127,6 +130,4 @@ def probability_matrix(sequence):
         prob_matrix[i, j] = coefficient
 
     return torch.tensor(prob_matrix)
-
-
 
