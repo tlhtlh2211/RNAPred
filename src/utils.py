@@ -131,3 +131,27 @@ def probability_matrix(sequence):
 
     return torch.tensor(prob_matrix)
 
+def mat2bp(x):
+    # Convert the matrix to base pairs
+    '''
+    matrix: the matrix
+    th: the threshold
+    return: the base pairs
+    '''
+    ind = torch.triu_indices(x.shape[0], x.shape[1], offset=1)
+    pairs_ind = torch.where(x[ind[0], ind[1]] > 0)[0]
+
+    pairs_ind = ind[:, pairs_ind].T
+    # remove multiplets pairs
+    multiplets = []
+    for i, j in pairs_ind:
+        ind = torch.where(pairs_ind[:, 1]==i)[0]
+        if len(ind)>0:
+            pairs = [bp.tolist() for bp in pairs_ind[ind]] + [[i.item(), j.item()]]
+            best_pair = torch.tensor([x[bp[0], bp[1]] for bp in pairs]).argmax()
+                
+            multiplets += [pairs[k] for k in range(len(pairs)) if k!=best_pair]   
+            
+    pairs_ind = [[bp[0]+1, bp[1]+1] for bp in pairs_ind.tolist() if bp not in multiplets]
+ 
+    return pairs_ind

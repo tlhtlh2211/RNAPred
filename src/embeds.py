@@ -42,7 +42,7 @@ class Embeds:
         }
     
     def embedSeq(self, seq, pads = "-"):
-        # Embeds the sequence into a tensor
+        # Embeds the sequence into a tensor using OneHotEncoding
         '''
         seq: the sequence to embed
         pads: the character used to pad the sequence
