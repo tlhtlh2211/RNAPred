@@ -8,7 +8,7 @@ import math
 import utils
 from metrics import contact_f1
 
-def train(pretrained = False, **kwargs):
+def rnapred(pretrained = False, **kwargs):
     '''
     This function trains the model
     '''

@@ -1,9 +1,131 @@
+import os.path
+import subprocess
 import torch
 import pandas as pd
 import numpy as np
 import sklearn.metrics as metrics
-from grakle import Graph
-from grakle.kernels import WeisfeilerLehman, VertexHistogram, WeisfeilerLehmanOptimalAssignment, ShortestPath
+from src import __path__ as src_path
+import warnings
+varna_path = f"{src_path[0]}/tools/varna/VARNAv3-93.jar"
+draw_call = f"export DATAPATH={src_path[0]}/tools/RNAstructure/data_tables;  {src_path[0]}/tools/RNAstructure/draw -c -u --svg -n 1"
+
+NT_DICT = {
+    "R": ["G", "A"],
+    "Y": ["C", "U"],
+    "K": ["G", "U"],
+    "M": ["A", "C"],
+    "S": ["G", "C"],
+    "W": ["A", "U"],
+    "B": ["G", "U", "C"],
+    "D": ["G", "A", "U"],
+    "H": ["A", "C", "U"],
+    "V": ["G", "C", "A"],
+    "N": ["G", "A", "C", "U"],
+}
+
+VOCABULARY = ["A", "C", "G", "U"]
+
+def write_ct(filename, seq, seq_id, bp):
+    # Write the base pairs to a .ct file
+    '''
+    seq: the sequence
+    pairs: the base pairs
+    filename: the filename
+    '''
+    bp_dict = {}
+    for i in bp:
+        bp_dict[bp[0]] = i[1]
+        bp_dict[bp[1]] = i[0]
+    with open(filename, "w") as f:
+        f.write(f"{len(seq)}\n {seq_id}\n")
+        for k, n in enumerate(seq):
+            f.write(f"{k + 1} {n} {k} {k + 2} {bp_dict.get(k + 1, 0)} {k + 1}\n")
+
+def valid_sequence(seq):
+    """Check if sequence is valid"""
+    return set(seq.upper()) <= (set(NT_DICT.keys()).union(set(VOCABULARY)))
+
+def validate_file(filename):
+    # Validate the file
+    '''
+    filename: the filename
+    '''
+    if os.path.splitext(filename)[1] == ".fasta":
+        table = []
+        with open(filename) as f:
+            row = []
+            for line in f:
+                if line.startswith(">"):
+                    if row:
+                        table.append(row)
+                        row = []
+                    row.append(line[1:].strip())
+                else:
+                    if len(row) == 1:
+                        row.append(line.strip())
+                        if not valid_sequence(row[-1]):
+                            raise ValueError(f"Invalid characters")
+                    else:  # struct
+                        row.append(line.strip()[
+                                   :len(row[1])])
+        if row:
+            table.append(row)
+        filename = filename.replace(".fasta", ".csv")
+        if len(table[-1]) == 2:
+            columns = ["id", "sequence"]
+        else:
+            columns = ["id", "sequence", "dotbracket"]
+        pd.DataFrame(table, columns=columns).to_csv(filename, index=False)
+
+    return filename
+
+
+def ct_to_dot(filename):
+    # Convert the .ct file to dotbracket notation
+    '''
+    filename: the filename
+    return: the dotbracket notation
+    '''
+    if not os.path.isfile(filename):
+        raise ValueError(f".ct file does not exist")
+    dot_bracket = ""
+    CT2DOT_CALL = f"export DATAPATH={src_path[0]}/tools/RNAstructure/data_tables; {src_path[0]}/tools/RNAstructure/ct2dot"
+
+    if CT2DOT_CALL:
+        subprocess.run(f"{CT2DOT_CALL} {filename}", shell=True, capture_output=True)
+        try:
+            dot_bracket = open("tmp.dot").readlines()[2].strip()
+            os.remove("tmp.dot")
+        except FileNotFoundError:
+            print("Error in dotbracket conversion")
+    else:
+        print("Dotbracket conversion only available in Linux")
+    return dot_bracket
+
+def dot2png(png_file, sequence, dotbracket, resolution=20):
+    # Convert the dotbracket notation to a png file
+    '''
+    png_file: the png file
+    sequence: the sequence
+    dotbracket: the dotbracket notation
+    '''
+    try:
+        subprocess.run("java -version", shell=True, check=True, capture_output=True)
+        subprocess.run(
+            f'java -cp {varna_path} fr.orsay.lri.varna.applications.VARNAcmd -sequenceDBN {sequence} -structureDBN "{dotbracket}" -o  {png_file} -resolution {resolution}',
+            shell=True)
+    except:
+        warnings.warn("Java Runtime Environment failed trying to run VARNA. Check if it is installed.")
+
+
+def ct2svg(ct_file, svg_file):
+    # Convert the .ct file to a svg file
+    '''
+    ct_file: the .ct file
+    svg_file: the svg file
+    '''
+    subprocess.run(
+        f"{draw_call} {ct_file} {svg_file}", shell=True, capture_output=True)
 
 
 def dotbracket_to_basepairs(dotbracket):

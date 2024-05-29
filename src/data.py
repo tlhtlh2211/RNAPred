@@ -12,7 +12,7 @@ import json
 # This class is used to load the data
 
 class Data(Dataset):
-    def __init__(self, path, cache, min_len = 0, max_len = 512, prediction = False, cannonical_mask = False, prior = "Probability Matrix"):
+    def __init__(self, path, cache=None, min_len = 0, max_len = 512, prediction = False, cannonical_mask = False, prior = "Probability Matrix", training=False, **kargs):
         # __init__ has following parameters:
         '''
         path: the path to the data
@@ -22,7 +22,7 @@ class Data(Dataset):
         canonical_mask: whether to use a canonical mask (default: False)
         prior: the prior to use (none, default: "Probability Matrix", "Pairwise")
         '''
-
+        data = pd.read_csv(path)
         self.min_len = min_len
         self.max_len = max_len
         self.sequences = data.sequence.tolist()
@@ -32,7 +32,7 @@ class Data(Dataset):
         self.prior = prior
         self.cannonical_mask = cannonical_mask
         self.cache = cache
-        
+        self.training = training
         # Create the cache directory if it does not exist
         if cache is not None and not os.path.isdir(cache):
             os.mkdir(cache)
@@ -105,8 +105,41 @@ class Data(Dataset):
 
         return item
     
-    def pad_patch(batch):
-        '''
-        batch: the batch of sequences, list of dictionaries
-        '''
-        
+def pad_batch(batch):
+    '''
+    batch: the batch of sequences, list of dictionaries
+    '''
+    lengths = [b["length"] for b in batch]
+    padded_embedding = torch.zeros((len(batch), batch[0]["embedding"].shape[0], max(lengths)))
+    if batch[0]["contact"] is None:
+        padded_contact = None
+    else:
+        padded_contact = -torch.ones((len(batch), max(lengths), max(lengths)), dtype=torch.long)
+
+    if batch[0]["canonical_mask"] is None:
+        padded_canonical_mask = None
+    else:
+        padded_canonical_mask = torch.zeros((len(batch), max(lengths), max(lengths)))
+
+    padded_interaction_prior = None
+    if batch[0]["interaction_prior"] is not None:
+        padded_interaction_prior = torch.zeros((len(batch), max(lengths), max(lengths)))
+
+    for i in range(len(batch)):
+        padded_embedding[i, :, : lengths[i]] = batch[i]["embedding"]
+        if padded_contact is not None:
+            padded_contact[i, : lengths[i], : lengths[i]] = batch[i]["contact"]
+        if padded_canonical_mask is not None:
+            padded_canonical_mask[i, : lengths[i], : lengths[i]] = batch[i]["canonical_mask"]
+
+        if padded_interaction_prior is not None:
+            padded_interaction_prior[i, : lengths[i], : lengths[i]] = batch[i]["interaction_prior"]
+
+    output_batch = {"contact": padded_contact,
+                    "embedding": padded_embedding,
+                    "length": lengths,
+                    "canonical_mask": padded_canonical_mask,
+                    "interaction_prior": padded_interaction_prior,
+                    "sequence": [b["sequence"] for b in batch],
+                    "id": [b["id"] for b in batch]}
+    return output_batch
