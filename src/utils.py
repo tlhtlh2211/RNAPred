@@ -4,10 +4,10 @@ import torch
 import pandas as pd
 import numpy as np
 import sklearn.metrics as metrics
-from src import __path__ as src_path
+from pretrained import __path__ as pretrained_path
 import warnings
-varna_path = f"{src_path[0]}/tools/varna/VARNAv3-93.jar"
-draw_call = f"export DATAPATH={src_path[0]}/tools/RNAstructure/data_tables;  {src_path[0]}/tools/RNAstructure/draw -c -u --svg -n 1"
+varna_path = f"{pretrained_path[0]}/VARNAv3-93.jar"
+draw_call = f"export DATAPATH={pretrained_path[0]}/RNAstructure/data_tables;  {pretrained_path}/RNAstructure/draw -c -u --svg -n 1"
 
 NT_DICT = {
     "R": ["G", "A"],
@@ -89,7 +89,7 @@ def ct_to_dot(filename):
     if not os.path.isfile(filename):
         raise ValueError(f".ct file does not exist")
     dot_bracket = ""
-    CT2DOT_CALL = f"export DATAPATH={src_path[0]}/tools/RNAstructure/data_tables; {src_path[0]}/tools/RNAstructure/ct2dot"
+    CT2DOT_CALL = f"export DATAPATH={pretrained_path[0]}/RNAstructure/data_tables; {pretrained_path[0]}/RNAstructure/ct2dot"
 
     if CT2DOT_CALL:
         subprocess.run(f"{CT2DOT_CALL} {filename}", shell=True, capture_output=True)
