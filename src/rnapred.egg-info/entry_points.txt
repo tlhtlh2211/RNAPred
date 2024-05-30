@@ -1,0 +1,2 @@
+[console_scripts]
+rnapred = rnapred.rnapred_parser:main

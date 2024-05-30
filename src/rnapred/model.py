@@ -2,7 +2,6 @@ from torch import nn
 from torch.nn.functional import cross_entropy
 import torch
 from tqdm import tqdm
-import numpy as np
 import pandas as pd
 import math
 import utils
@@ -256,8 +255,8 @@ class RNAPrediction(nn.Module):
                             ))
                     predictions.append(
                         (seqid[k],
-                        sequences[k],
-                            utils.mat2bp(
+                         sequences[k],
+                         utils.mat2bp(
                                 y_pred_post[k, : lengths[k], : lengths[k]].squeeze()
                             )                         
                         )

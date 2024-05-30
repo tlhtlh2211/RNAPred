@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 import numpy as np
 import sklearn.metrics as metrics
-from pretrained import __path__ as pretrained_path
+from rnapred import __path__ as pretrained_path
 import warnings
 varna_path = f"{pretrained_path[0]}/VARNAv3-93.jar"
 draw_call = f"export DATAPATH={pretrained_path[0]}/RNAstructure/data_tables;  {pretrained_path}/RNAstructure/draw -c -u --svg -n 1"

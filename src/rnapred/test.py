@@ -1,9 +1,6 @@
-# This file is used to test the code in the src folder
-
 import unittest
 import utils
 import torch
-import pandas as pd
 import numpy as np
 
 class TestSrc(unittest.TestCase):

@@ -9,11 +9,11 @@ import pickle
 import torch as tr
 
 from torch.utils.data import DataLoader
-from data import Data, pad_batch
-from model import rnapred
-from utils import write_ct, validate_file, ct_to_dot
-from src.parser import parser
-from utils import dot2png, ct2svg
+from src.rnapred.data import Data, pad_batch
+from src.rnapred.model import rnapred
+from src.rnapred.utils import write_ct, validate_file, ct_to_dot
+from src.rnapred.rnapred_parser import parser
+from src.rnapred.utils import dot2png, ct2svg
 
 
 nu_dict = {
@@ -164,7 +164,7 @@ def predict(input_data, seq_id='pred_id', model_weights=None, output_dir=None, r
         prediction_file = validate_file(input_data)
     else:
         input_data = input_data.upper().strip()
-        nucleotide_set = set([i for item in list(nu_dict.values()) for i in item] + list(NT_DICT.keys()))
+        nucleotide_set = set([i for item in list(nu_dict.values()) for i in item] + list(nu_dict.keys()))
         if set(input_data).issubset(nucleotide_set):
             prediction_file = f"{seq_id}.csv"
             with open(prediction_file, "w") as f:
