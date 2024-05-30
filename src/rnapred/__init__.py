@@ -9,11 +9,11 @@ import pickle
 import torch as tr
 
 from torch.utils.data import DataLoader
-from src.rnapred.data import Data, pad_batch
-from src.rnapred.model import rnapred
-from src.rnapred.utils import write_ct, validate_file, ct_to_dot
-from src.rnapred.rnapred_parser import parser
-from src.rnapred.utils import dot2png, ct2svg
+from .data import Data, pad_batch
+from .model import rnapred
+from .utils import write_ct, validate_file, ct_to_dot
+from .rnapred_parser import parser
+from .utils import dot2png, ct2svg
 
 
 nu_dict = {
