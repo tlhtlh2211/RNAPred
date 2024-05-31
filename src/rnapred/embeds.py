@@ -50,7 +50,7 @@ class Embeds:
         '''
         seq = seq.upper().replace("T", "U") # Convert to uppercase and replace T with U (RNA -> DNA)
 
-        embed = torch.zeros((len(seq), self.size), dtype= np.float32) # Initialize the tensor
+        embed = torch.zeros((4, len(seq)), dtype=torch.float) # Initialize the tensor
 
         for i, n in enumerate(seq):
             if n == pads: 

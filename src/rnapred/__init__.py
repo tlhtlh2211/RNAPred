@@ -232,6 +232,7 @@ def predict(input_data, seq_id='pred_id', model_weights=None, output_dir=None, r
         os.mkdir(logits_dir)
         for id, pred, pred_post in logits_list:
             pickle.dump((pred, pred_post), open(os.path.join(logits_dir, id + ".pk"), "wb"))
+
 def main():
     args = parser()
     if not args.no_cache and args.command == "train":

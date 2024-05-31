@@ -277,3 +277,104 @@ def mat2bp(x):
     pairs_ind = [[bp[0]+1, bp[1]+1] for bp in pairs_ind.tolist() if bp not in multiplets]
  
     return pairs_ind
+
+def postprocessing(preds, masks):
+    """Postprocessing function using viable pairing mask.
+    Inputs are batches of size [B, N, N]"""
+    if masks is not None:
+        preds = preds.multiply(masks)
+
+    y_pred_mask_triu = torch.triu(preds)
+    y_pred_mask_max = torch.zeros_like(preds)
+    for k in range(preds.shape[0]):
+        y_pred_mask_max_aux = torch.zeros_like(y_pred_mask_triu[k, :, :])
+
+        val, ind = y_pred_mask_triu[k, :, :].max(dim=0)
+        y_pred_mask_max[k, ind[val > 0], val > 0] = val[val > 0]
+
+        val, ind = y_pred_mask_max[k, :, :].max(dim=1)
+        y_pred_mask_max_aux[val > 0, ind[val > 0]] = val[val > 0]
+
+        ind = torch.where(y_pred_mask_max[k, :, :] != y_pred_mask_max_aux)
+        y_pred_mask_max[k, ind[0], ind[1]] = 0
+
+        y_pred_mask_max[k] = torch.triu(y_pred_mask_max[k]) + torch.triu(
+            y_pred_mask_max[k]
+        ).transpose(0, 1)
+    return y_pred_mask_max
+
+def find_pseudoknots(base_pairs):
+    pseudoknots = []
+    for i, j in base_pairs:
+        for k, l in base_pairs:
+            if i < k < j < l:  # pseudoknot definition
+                if [k, l] not in pseudoknots:
+                    pseudoknots.append([k, l])
+    return pseudoknots
+
+def dot2png(png_file, sequence, dotbracket, resolution=10):
+
+    try:
+        subprocess.run("java -version", shell=True, check=True, capture_output=True)
+        subprocess.run(f'java -cp {"/home/ubuntu/21hai.tl/RNAPred/src/rnapred/Tools/VARNAv3-93.jar"} fr.orsay.lri.varna.applications.VARNAcmd -sequenceDBN {sequence} -structureDBN "{dotbracket}" -o  {png_file} -resolution {resolution}', shell=True)
+    except:
+        warnings.warn("Java Runtime Environment failed trying to run VARNA. Check if it is installed.")
+    
+
+def valid_sequence(seq):
+    """Check if sequence is valid"""
+    return set(seq.upper()) <= (set(NT_DICT.keys()).union(set(VOCABULARY)))
+
+def validate_file(pred_file):
+    """Validate input file fasta/csv format and return csv file"""
+    if os.path.splitext(pred_file)[1] == ".fasta":
+        table = []
+        with open(pred_file) as f:
+            row = [] # id, seq, (optionally) struct
+            for line in f:
+                if line.startswith(">"):
+                    if row:
+                        table.append(row)
+                        row = []
+                    row.append(line[1:].strip())
+                else:
+                    if len(row) == 1: # then is seq
+                        row.append(line.strip())
+                        if not valid_sequence(row[-1]):
+                            raise ValueError(f"Sequence {row.upper()} contains invalid characters")
+                    else: # struct
+                        row.append(line.strip()[:len(row[1])]) # some fasta formats have extra information in the structure line
+        if row:
+            table.append(row)
+        
+        pred_file = pred_file.replace(".fasta", ".csv")
+        
+        if len(table[-1]) == 2:
+            columns = ["id", "sequence"]
+        else:
+            columns = ["id", "sequence", "dotbracket"]
+
+        pd.DataFrame(table, columns=columns).to_csv(pred_file, index=False)
+
+    elif os.path.splitext(pred_file)[1] != ".csv":
+        raise ValueError("Predicting from a file with format different from .csv or .fasta is not supported")
+    
+    return pred_file 
+
+def validate_canonical(sequence, base_pairs):
+    if not valid_sequence(sequence):
+        return False, "Invalid sequence"
+
+    for i, j in base_pairs:
+        nt1, nt2 = sequence[i-1], sequence[j-1]
+        if pair_strength((nt1, nt2))==0:
+            return False, f"Invalid base pair: {nt1} {nt2}"
+
+        for k, l in base_pairs:
+            if (k, l) != (i, j):
+                if i in (k, l):
+                    return False, f"Nucleotide {i} is in pair {i, j} and {k, l}"
+                if j in (k, l):
+                    return False, f"Nucleotide {j} is in pair {i, j} and {k, l}"
+
+    return True, ""
