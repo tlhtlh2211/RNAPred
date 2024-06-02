@@ -86,13 +86,14 @@ def ct_to_dot(filename):
     filename: the filename
     return: the dotbracket notation
     '''
-    if not os.path.isfile(filename):
+    print(filename)
+    if not os.path.isfile(filename) or os.path.splitext(filename)[1] != ".ct":
         raise ValueError(f".ct file does not exist")
     dot_bracket = ""
     CT2DOT_CALL = f"export DATAPATH={pretrained_path[0]}/RNAstructure/data_tables; {pretrained_path[0]}/RNAstructure/ct2dot"
 
     if CT2DOT_CALL:
-        subprocess.run(f"{CT2DOT_CALL} {filename}", shell=True, capture_output=True)
+        subprocess.run(f"{CT2DOT_CALL} {filename} 1 tmp.dot", shell=True, capture_output=True)
         try:
             dot_bracket = open("tmp.dot").readlines()[2].strip()
             os.remove("tmp.dot")

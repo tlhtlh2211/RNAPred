@@ -16,12 +16,11 @@ def rnapred(pretrained = False, **kwargs):
     The data is loaded using the Data class
     '''
     model = RNAPrediction(**kwargs)
-    '''
     if pretrained:
-        model.load_state_dict(torch.load("model.pt"))
+        print("Load pretrained weights...")
+        model.load_state_dict(torch.hub.load_state_dict_from_url("/home/ubuntu/21hai.tl/RNAPred/output_path/model_weights.pmt", map_location=torch.device(model.device)))
     else:
-        model.load_state_dict(torch.load("model.pt", map_location=torch.device(model.device)))
-    '''
+        print("No weights provided, using random initialization")
     
     return model
 
